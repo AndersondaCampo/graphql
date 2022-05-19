@@ -51,11 +51,4 @@ begin
   Next;
 end;
 
-initialization
-
-finalization
-
-if Assigned(FQuery) then
-  FreeAndNil(FQuery);
-
 end.
