@@ -101,7 +101,9 @@
         <DCCReference Include="..\..\..\Source\GraphQL.SyntaxAnalysis.Core.pas"/>
         <DCCReference Include="..\..\..\Source\GraphQL.Utils.JSON.pas"/>
         <DCCReference Include="..\..\..\Source\GraphQL.Utils.Rtti.pas"/>
-        <DCCReference Include="src\GraphQL.Entity.pas"/>
+        <DCCReference Include="..\..\..\Source\GraphQL.Horse.pas"/>
+        <DCCReference Include="src\query\Query.User.pas"/>
+        <DCCReference Include="src\query\Query.Entity.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

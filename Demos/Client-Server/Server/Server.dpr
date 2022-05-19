@@ -20,51 +20,30 @@ uses
   GraphQL.SyntaxAnalysis.Core in '..\..\..\Source\GraphQL.SyntaxAnalysis.Core.pas',
   GraphQL.Utils.JSON in '..\..\..\Source\GraphQL.Utils.JSON.pas',
   GraphQL.Utils.Rtti in '..\..\..\Source\GraphQL.Utils.Rtti.pas',
-  GraphQL.Entity in 'src\GraphQL.Entity.pas';
+  GraphQL.Horse in '..\..\..\Source\GraphQL.Horse.pas',
+  Query.User in 'src\query\Query.User.pas',
+  Query.Entity in 'src\query\Query.Entity.pas';
 
 var
   Query: TGraphQLQuery;
 
-procedure Graphql(req: THorseRequest; res: THorseResponse);
-var
-  LGraphQL: IGraphQL;
-  LVars   : IGraphQLVariables;
-  Idx: Integer;
 begin
-  try
-    LGraphQL := Query.Parse(req.Body);
-    LVars    := TGraphQLVariables.Create;
+  ReportMemoryLeaksOnShutdown := True;
 
-    for Idx := 0 to LGraphQL.Params.Count -1 do
-      LVars.SetVariable(LGraphQL.Params[Idx].ParamName, LGraphQL.Params[Idx].DefaultValue);
-
-    res.Send(Query.Run(lGraphQL, LVars));
-  except
-    on E: Exception do
-      res.Status(404).Send(E.Message);
-  end;
-end;
-
-begin
   try
     Query := TGraphQLQuery.Create;
-    try
-      Query.RegisterResolver(TGraphQLRttiResolver.Create(TPersonManager, True));
+    Query.RegisterResolver(TGraphQLRttiResolver.Create(TPersonManager, True));
 
-//      THorse.Use(Jhonson);
-      THorse.Post('/Query', Graphql);
+    THorse.Post('/Query', GraphQLQuery(Query));
 
-      THorse.Listen(3000,
-        procedure(App: THorse)
-        begin
-          Writeln('App listening on port ', App.Port);
-          Writeln('Press ani key to exit...');
-          Readln;
-          THorse.StopListen;
-        end);
-    finally
-      Query.DisposeOf;
-    end;
+    THorse.Listen(3000,
+      procedure(App: THorse)
+      begin
+        Writeln('App listening on port ', App.Port);
+        Writeln('Press ani key to exit...');
+        Readln;
+        THorse.StopListen;
+      end);
   except
     on E: Exception do
       Writeln(E.ClassName, ': ', E.Message);
